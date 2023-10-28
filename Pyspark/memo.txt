@@ -1,0 +1,110 @@
+机器学习的前置处理
+大数据时代的数据处理
+----------
+大数据处理时代
+大数据的定义
+各种设备收集到的不规则的形式的各种数据。
+种类繁多。
+形式繁多。
+范围广。
+大数据数据类型分类
+构造化，非构造化数据。
+构造化一般有行和列。
+非构造化包括动画，图像，声音，传感器，GPS等没有行列概念的数据。
+行指向和列指向的关系型数据库。
+相比较行指向，列指向的效率更高，更利于数据分析。列为单位的计算更简单可以达成。行单位的数据需要一次取出所有列的数据，是非效率的。
+
+----------
+从数据仓库到数据湖
+数据仓库
+联想TB项目
+datasource-datawarehouse-datamart-可视化
+数据湖
+Datalake是为了存放生的非构造化数据，等需要处理的时候再拿出来。
+
+----------
+数据的两种处理手法分类：
+batch处理和streaming处理
+批处理和流媒体处理
+批处理是一次性处理大量动作。
+流处理比如log的处理，是指不断持续发生的处理realtime处理。即时处理。
+
+----------
+Hadoop-分散处理平台
+数据在不同服务器上并行处理的软件平台。
+适用于大规模的数据处理。
+Google公开的开源技术
+-GFS-GoogleFileSystem
+-GoogleMapReduce
+
+Hadoop的组成部分：
+1，并行分散处理-MapReduce
+目的，为了进行批处理
+Map是对分割的数据进行分别处理，Reduce是将处理的结果重新合计在一起。
+分为master中的job tracker和slave中的data node通过job tracker来追踪任务的处理和后续处理。
+巨大的局限性：MR的大部分处理都是冲disk来进行读写，会花很多时间，反复处理会比较慢。所以需要spark。
+2，资源resource管理-YARN
+master node是resource manager，管理资源以及对slave进行任务分派
+slave node是Node manager主要通过MapReduce等流程进行启动和管理
+3，分散存储storage-HDFS（hadoop distributed file system）
+分master node和slave node
+master存储元数据情报
+slave是数据的实体
+数据很大的情况，数据会被氛围很多block
+同一个block会进行灾害处理而放在很多个data node上
+但是它不擅长存储很多小文件以及文件的更新和保存
+
+----------
+ApacheSpark
+大规模数据分析的引擎。
+使用hadoop的结构。
+相比较MR是更好的API。
+可以进行inmemory分散处理的反复高速执行。
+可以进行SQL，streaming处理，机器学习等。
+Java，Python，R的开发也可以进行。
+
+Spark特征
+1，大规模数据高速处理speed
+MR不断读写disk而spark在内存内反复利用。减少overhead。
+2，开发利用简单easy to use
+无需在意背后的分散处理，简单利用各种语言进行开发。
+3，泛用性高Generality
+SQL处理，Sparkstreaming处理，MLlib机器学习，GraphX图像处理
+4，处理环境多样Runs Everywhere
+单独环境，云环境都可，方便接续到任何其他datasource。
+
+Spark的组成部分：
+1，MR的部分变成了Spark
+2，YARN不变
+3，存储可以是任何，比如S3
+
+Spark的Architecture组成原理
+背后的master和slave都是Java。
+但是一开始是用Python的Spark Content来呼出的。
+所以显得很简单。
+
+Spark处理的数据类型三种dataset的API
+将分散的数据作为一个object进行处理
+1，RDD(Resilient distributed dataset)
+有不变性，耐灾害，分散性的优点但是容易overhead
+2，DataFrame
+构造型数据，分散处理，容易进行命令处理，可以用Python和R进行处理，overhead和memory消耗少
+3，Dataset
+吸收了前两者优点的api
+
+----------
+我的问题。
+大数据还有哪些必要技术。
+和分散并行处理相关的技术还有哪些。
+我的问题，那我用的airflow是什么技术。
+AWS还有什么相似的技术服务。
+当今的数据分析用的包包括这些吗，SparkSQL，SparkMLlib，Sparkstreaming，Spark GraphX等。其他的还有什么。
+
+----------
+具体内容
+SparkSQL
+SparkMLlib
+
+----------
+虚拟化技术Docker
+
