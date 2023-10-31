@@ -105,6 +105,18 @@ AWS还有什么相似的技术服务。
 SparkSQL
 SparkMLlib
 
+
+from pyspark.sql import SparkSession
+sparksession = SparkSession.builder.appName('Data_wrangling').getOrCreate()
+df = ss.createDataFrame(((‘banana’, 100), (‘watermelon’, 1500), (‘peach’, 300)), [‘fruit’, ‘price’])
+单纯写sql：
+sparksession.sql("-sql-")
+二者返回的都是df形式的数据
+函数利用
+from pyspark.sql import functions as F
+
+
+
 ----------
 虚拟化技术Docker
 
