@@ -1,11 +1,5 @@
-# Data Preprocessing
-
-# Importing the libraries
 import numpy as np
-# import matplotlib.pyplot as plt
 import pandas as pd
-# Imputer can not be use any more
-# from sklearn.preprocessing import Imputer 
 from sklearn.impute import SimpleImputer
 
 
