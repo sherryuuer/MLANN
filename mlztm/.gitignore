@@ -10,8 +10,8 @@ env
 */.ipynb_checkpoints/*
 
 # Model files
-*.pkl
-*.joblib
+# *.pkl
+# *.joblib
 
 # Misc (playground/large data file)
 data/bluebook_for_bulldozers/*
