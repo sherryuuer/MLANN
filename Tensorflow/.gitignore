@@ -7,3 +7,16 @@ my-pizza-image.jpeg
 10_food_classes_all_data.zip
 10_food_classes_all_data
 __MACOSX
+__pycache__
+
+nlp_getting_started.zip
+nlp_data
+
+model_logs
+embedding_metadata.tsv
+embedding_vectors.tsv
+
+model_6_tf_hub_USE.h5
+saved_cnn_model_11
+model_6_SavedModel_format
+
