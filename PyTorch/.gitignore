@@ -2,4 +2,5 @@ venv
 data
 .ipynb_checkpoints
 models
-PyTorch/__pycache__
+__pycache__
+runs

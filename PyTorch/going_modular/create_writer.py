@@ -1,3 +1,7 @@
+import torch
+from torch.utils.tensorboard.writer import SummaryWriter
+
+
 def create_writer(experiment_name: str,
                   model_name: str,
                   extra: str = None) -> torch.utils.tensorboard.writer.SummaryWriter():
