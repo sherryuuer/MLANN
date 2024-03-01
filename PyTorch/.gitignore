@@ -5,3 +5,7 @@ models
 __pycache__
 runs
 foodvision_big
+gemma_pytorch
+kaggle
+archive
+archive.tar.gz
