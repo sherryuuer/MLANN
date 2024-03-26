@@ -11,9 +11,9 @@
 # MAGIC
 # MAGIC # XGBoost
 # MAGIC
-# MAGIC ここまでは、SparkMLのみを使用してきました。3rdパーティライブラリの勾配ブースティング決定木(Gradient Boosted Trees)を見てみましょう。
-# MAGIC
-# MAGIC <a href="https://docs.microsoft.com/en-us/azure/databricks/runtime/mlruntime" target="_blank">Databricks Runtime for ML</a> には分散XGBoostがインストールされているので、それを使用していることを確認してください。
+# MAGIC ここまでは、SparkMLのみを使用してきました。3rdパーティライブラリの勾配ブースティング決定木(Gradient Boosted Trees)を見てみましょう。 
+# MAGIC  
+# MAGIC <a href="https://docs.microsoft.com/en-us/azure/databricks/runtime/mlruntime" target="_blank">Databricks Runtime for ML</a> には分散XGBoostがインストールされているので、それを使用していることを確認してください。 
 # MAGIC
 # MAGIC **質問**：gradient boosted treeとrandom forestの違いは？どの部分を並列化できるのか？
 # MAGIC
@@ -34,31 +34,21 @@
 
 # COMMAND ----------
 
-from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.sql.functions import exp, col
-from pyspark.ml import Pipeline
-from xgboost.spark import SparkXGBRegressor
 from pyspark.sql.functions import log, col
 from pyspark.ml.feature import StringIndexer, VectorAssembler
 
-file_path = f"{
-    DA.paths.datasets}/airbnb/sf-listings/sf-listings-2019-03-06-clean.delta/"
+file_path = f"{DA.paths.datasets}/airbnb/sf-listings/sf-listings-2019-03-06-clean.delta/"
 airbnb_df = spark.read.format("delta").load(file_path)
-train_df, test_df = airbnb_df.withColumn(
-    "label", log(col("price"))).randomSplit([.8, .2], seed=42)
+train_df, test_df = airbnb_df.withColumn("label", log(col("price"))).randomSplit([.8, .2], seed=42)
 
-categorical_cols = [field for (field, dataType)
-                    in train_df.dtypes if dataType == "string"]
+categorical_cols = [field for (field, dataType) in train_df.dtypes if dataType == "string"]
 index_output_cols = [x + "Index" for x in categorical_cols]
 
-string_indexer = StringIndexer(
-    inputCols=categorical_cols, outputCols=index_output_cols, handleInvalid="skip")
+string_indexer = StringIndexer(inputCols=categorical_cols, outputCols=index_output_cols, handleInvalid="skip")
 
-numeric_cols = [field for (field, dataType) in train_df.dtypes if (
-    (dataType == "double") & (field != "price") & (field != "label"))]
+numeric_cols = [field for (field, dataType) in train_df.dtypes if ((dataType == "double") & (field != "price") & (field != "label"))]
 assembler_inputs = index_output_cols + numeric_cols
-vec_assembler = VectorAssembler(
-    inputCols=assembler_inputs, outputCol="features")
+vec_assembler = VectorAssembler(inputCols=assembler_inputs, outputCol="features")
 
 # COMMAND ----------
 
@@ -66,7 +56,7 @@ vec_assembler = VectorAssembler(
 # MAGIC
 # MAGIC ### Pyspark Distributed XGBoost
 # MAGIC
-# MAGIC それでは、分散型XGBoostのモデルを作ってみましょう。技術的にはMLlibの一部ではありませんが、<a href="https://databricks.github.io/spark-deep-learning/_modules/sparkdl/xgboost/xgboost.html" target="_blank">XGBoost</a> をMLのパイプラインに統合することができます。
+# MAGIC それでは、分散型XGBoostのモデルを作ってみましょう。技術的にはMLlibの一部ではありませんが、<a href="https://databricks.github.io/spark-deep-learning/_modules/sparkdl/xgboost/xgboost.html" target="_blank">XGBoost</a> をMLのパイプラインに統合することができます。 
 # MAGIC
 # MAGIC Pyspark XGBoost の分散処理バージョンを使用する際に、2つの追加パラメータを指定することができます。
 # MAGIC
@@ -77,13 +67,12 @@ vec_assembler = VectorAssembler(
 
 # COMMAND ----------
 
-# from sparkdl.xgboost import XgboostRegressor
+from sparkdl.xgboost import XgboostRegressor
+from pyspark.ml import Pipeline
 
-params = {"n_estimators": 100, "learning_rate": 0.1,
-          "max_depth": 4, "random_state": 42, "missing": 0}
+params = {"n_estimators": 100, "learning_rate": 0.1, "max_depth": 4, "random_state": 42, "missing": 0}
 
-# xgboost = XgboostRegressor(**params)
-xgboost = SparkXGBRegressor(**params)
+xgboost = XgboostRegressor(**params)
 
 pipeline = Pipeline(stages=[string_indexer, vec_assembler, xgboost])
 pipeline_model = pipeline.fit(train_df)
@@ -98,6 +87,7 @@ pipeline_model = pipeline.fit(train_df)
 
 # COMMAND ----------
 
+from pyspark.sql.functions import exp, col
 
 log_pred_df = pipeline_model.transform(test_df)
 
@@ -113,9 +103,9 @@ display(exp_xgboost_df.select("price", "prediction"))
 
 # COMMAND ----------
 
+from pyspark.ml.evaluation import RegressionEvaluator
 
-regression_evaluator = RegressionEvaluator(
-    predictionCol="prediction", labelCol="price", metricName="rmse")
+regression_evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="price", metricName="rmse")
 
 rmse = regression_evaluator.evaluate(exp_xgboost_df)
 r2 = regression_evaluator.setMetricName("r2").evaluate(exp_xgboost_df)
