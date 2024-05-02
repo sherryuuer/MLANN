@@ -92,31 +92,39 @@ Spark处理的数据类型三种dataset的API
 3，Dataset
 吸收了前两者优点的api
 
-----------
-我的问题。
-大数据还有哪些必要技术。
-和分散并行处理相关的技术还有哪些。
-我的问题，那我用的airflow是什么技术。
-AWS还有什么相似的技术服务。
-当今的数据分析用的包包括这些吗，SparkSQL，SparkMLlib，Sparkstreaming，Spark GraphX等。其他的还有什么。
-
-----------
-具体内容
-SparkSQL
-SparkMLlib
-
-
-from pyspark.sql import SparkSession
-sparksession = SparkSession.builder.appName('Data_wrangling').getOrCreate()
-df = ss.createDataFrame(((‘banana’, 100), (‘watermelon’, 1500), (‘peach’, 300)), [‘fruit’, ‘price’])
-单纯写sql：
-sparksession.sql("-sql-")
-二者返回的都是df形式的数据
-函数利用
-from pyspark.sql import functions as F
-
 
 
 ----------
 虚拟化技术Docker
 
+阿里云教程：https://developer.aliyun.com/article/928708
+
+官方教程：https://spark.apache.org/docs/latest/api/python/index.html
+
+documentation: https://spark.apache.org/docs/latest
+
+
+Apache Spark 是一个通用的大数据处理框架，提供了多个核心库和附加库，用于处理数据、构建分布式应用程序和执行机器学习任务等。以下是 Spark 中的一些核心库和常用附加库以及它们的主要用途：
+
+1. **核心库**：
+   - **Spark Core**：Spark Core 是 Spark 的核心库，提供了分布式任务调度、内存计算、容错性和数据分区等基本功能。它定义了 RDD（Resilient Distributed Dataset）数据结构，并提供了 RDD API 用于数据处理和操作。
+   - **Spark SQL**：Spark SQL 提供了用于结构化数据处理和查询的高级 API。它支持 DataFrame 和 Dataset 抽象，并提供了 SQL 查询、DataFrame 操作和内置函数等功能。
+   - **Spark Streaming**：Spark Streaming 是 Spark 的流处理库，提供了对实时数据流的处理和分析功能。它使用微批处理模型来处理连续流数据，并提供了类似于批处理的 API 接口。
+   - **MLlib**：MLlib 是 Spark 的机器学习库，提供了用于机器学习和数据挖掘的各种算法和工具。它支持分类、回归、聚类、降维等常见的机器学习任务，并提供了分布式训练和模型评估功能。
+
+2. **附加库**：
+   - **Spark GraphX**：Spark GraphX 是 Spark 的图处理库，提供了用于图数据的分布式图算法和操作。它支持顶点和边的属性图模型，并提供了图算法和图操作的 API 接口。
+   - **Spark Streaming Kafka**：Spark Streaming Kafka 是 Spark 的 Kafka 集成库，用于从 Apache Kafka 中读取数据流，并将数据流集成到 Spark Streaming 应用程序中进行处理。
+   - **Spark Cassandra Connector**：Spark Cassandra Connector 是 Spark 的 Cassandra 集成库，用于在 Spark 应用程序中读取和写入 Cassandra 数据库中的数据。
+
+除了以上列举的核心库和附加库外，还有一些其他的第三方库和扩展库，用于在 Spark 中进行各种数据处理和分析任务。这些库的组合和使用方式取决于应用程序的需求和数据处理的特点。
+
+笔记：
+RDD弹性分布式数据集，一组方法function，充分表达了数据集的分布式计算。
+
+底层是scala，java，然后才是python，所以如果更新scala是先行的。
+
+和一般的机器学习不同，spark中的featurn和label是经过包装处理的，fit的时候将整个数据集放进去，而不是像其他的那样X，y分开。
+当然predict的时候当然是没有标签只有一个features的。
+
+很多的评价方法更多是用来比较的。比如R平方。
